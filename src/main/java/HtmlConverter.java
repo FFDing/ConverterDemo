@@ -96,16 +96,19 @@ public class HtmlConverter {
                 next = null;
             }
             if(  !curr.isBlank() && !curr.startsWith("<h") && !curr.contains("<a")) {
-                if(pre==null || pre.isBlank()) {
+                if(pre==null || pre.isBlank() || pre.startsWith("<h") ||  pre.contains("<a")) {
                     curr = addLeftPTag(curr);
                 }
 
-                if(next == null || next.isBlank()) {
+                if(next == null || next.isBlank() || next.startsWith("<h") ||  next.contains("<a")) {
                     curr = addRightPTag(curr);
                 }
+
                 ss.set(i, curr);
             }
         }
+
+
     }
 
     public String addLeftPTag(String s){
