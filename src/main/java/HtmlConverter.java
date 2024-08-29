@@ -26,6 +26,7 @@ public class HtmlConverter {
         String[] ss = s.split("\n");
         List<String> convertedS = Arrays.stream(ss)
                 .map(this::convert).collect(Collectors.toList());
+        modifyParagraphTag(convertedS);
         return String.join("\n", convertedS);
     }
 
@@ -37,10 +38,10 @@ public class HtmlConverter {
             return markdown;
         }
 
-         markdown = markdown.trim();
-         markdown = convertHeader(markdown);
-         markdown = convertLink(markdown);
-         markdown = convertParagraphs(markdown);
+        markdown = markdown.trim();
+        markdown = convertHeader(markdown);
+        markdown = convertLink(markdown);
+        // markdown = convertParagraphs(markdown);
 
         return markdown;
     }
@@ -59,7 +60,7 @@ public class HtmlConverter {
         }else if(markdown.startsWith("#")) {
             return convertHeader(markdown, "(?m)^#\s*(.+)$", "<h1>$1</h1>");
         }
-       return markdown;
+        return markdown;
     }
 
     public String convertHeader(String markdown, String reg, String htmlFormat){
@@ -77,4 +78,52 @@ public class HtmlConverter {
         return markdown;
     }
 
+    public void modifyParagraphTag(List<String> ss){
+        int len = ss.size();
+        String curr = null;
+        String pre = null;
+        String next = null;
+
+        for(int i = 0; i < len; i++) {
+            curr = ss.get(i);
+            if (i > 0) {
+                pre = ss.get(i - 1);
+            }
+            if (i < len - 1) {
+                next = ss.get(i + 1);
+            }
+            if (i == len - 1) {
+                next = null;
+            }
+            if(  !curr.isBlank() && !curr.startsWith("<h") && !curr.contains("<a")) {
+                if(pre==null || pre.isBlank()) {
+                    curr = addLeftPTag(curr);
+                }
+
+                if(next == null || next.isBlank()) {
+                    curr = addRightPTag(curr);
+                }
+                ss.set(i, curr);
+            }
+        }
+    }
+
+    public String addLeftPTag(String s){
+        s = "<p>" + s;
+        return s;
+    }
+
+    public String addRightPTag(String s){
+        s = s + "</p>";
+        return s;
+    }
+
+    public String addBothPTag(String s){
+
+        s = "<p>" + s + "</p>";
+        return s;
+
+    }
+
 }
+
