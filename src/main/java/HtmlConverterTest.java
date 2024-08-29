@@ -7,6 +7,25 @@ public class HtmlConverterTest {
         testConvertLink();
         testConvertParagraph();
         testConvert();
+        testConvertStrings();
+    }
+
+    public static void testConvertStrings(){
+        String testString ="# Sample Document\n" +
+                "\n" +
+                "Hello!\n" +
+                "\n" +
+                "This is sample markdown for the [Mailchimp](https://www.mailchimp.com) homework assignment.\n";
+        HtmlConverter converter = new HtmlConverter();
+        String html = converter.convertStrings(testString);
+        String expected ="<h1>Sample Document</h1>\n" +
+                "\n" +
+                "<p>Hello!</p>\n" +
+                "\n" +
+                "<p>This is sample markdown for the <a href=\"https://www.mailchimp.com\">Mailchimp</a> homework assignment.</p>";
+        //System.out.println(html);
+        //System.out.println(expected);
+        System.out.println(html.equals(expected)? "convertStrings: passed" : "convertStrings: failed");
     }
 
     public static void testConvertHeader(){
@@ -17,7 +36,7 @@ public class HtmlConverterTest {
         String htmlString2 = converter.convertHeader("##test");
         System.out.println(htmlString2.equals("<h2>test</h2>") ? "h2: passed" :"h2: failed");
 
-        String htmlString3 = converter.convertHeader("###test");
+        String htmlString3 = converter.convertHeader("###  test");
         System.out.println(htmlString3.equals("<h3>test</h3>") ? "h3: passed" :"h3: failed");
 
         String htmlString4 = converter.convertHeader("####test");

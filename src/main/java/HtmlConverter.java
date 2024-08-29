@@ -1,11 +1,14 @@
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 /**
  *  This is a class to convert markdown to Html. Run this class, then input text, the class will print html.
  * */
 public class HtmlConverter {
     public static void main(String[] args){
-        Scanner scan = new Scanner(System.in).useDelimiter("\n");;
+        Scanner scan = new Scanner(System.in).useDelimiter("\n");
         System.out.println("Please input markdown");
         HtmlConverter converter = new HtmlConverter();
         String inputString = scan.next();
@@ -18,11 +21,23 @@ public class HtmlConverter {
         scan.close();
     }
 
+
+    public String convertStrings(String s){
+        String[] ss = s.split("\n");
+        List<String> convertedS = Arrays.stream(ss)
+                .map(this::convert).collect(Collectors.toList());
+        return String.join("\n", convertedS);
+    }
+
     public String convert(String markdown){
-        if(markdown == null || markdown.isBlank()){
+        if(markdown == null ){
             return "";
         }
+        if(markdown.isBlank()){
+            return markdown;
+        }
 
+         markdown = markdown.trim();
          markdown = convertHeader(markdown);
          markdown = convertLink(markdown);
          markdown = convertParagraphs(markdown);
@@ -32,17 +47,17 @@ public class HtmlConverter {
 
     public String convertHeader(String markdown){
         if(markdown.startsWith("######")){
-            return convertHeader(markdown,"(?m)^######(.+)$", "<h6>$1</h6>");
+            return convertHeader(markdown,"(?m)^######\s*(.+)$", "<h6>$1</h6>");
         }else if(markdown.startsWith("#####")){
-            return convertHeader(markdown,"(?m)^#####(.+)$", "<h5>$1</h5>");
+            return convertHeader(markdown,"(?m)^#####\s*(.+)$", "<h5>$1</h5>");
         }else if(markdown.startsWith("####")) {
-            return convertHeader(markdown, "(?m)^####(.+)$", "<h4>$1</h4>");
+            return convertHeader(markdown, "(?m)^####\s*(.+)$", "<h4>$1</h4>");
         }else if(markdown.startsWith("###")) {
-            return convertHeader(markdown, "(?m)^###(.+)$", "<h3>$1</h3>");
+            return convertHeader(markdown, "(?m)^###\s*(.+)$", "<h3>$1</h3>");
         }else if(markdown.startsWith("##")) {
-            return convertHeader(markdown, "(?m)^##(.+)$", "<h2>$1</h2>");
+            return convertHeader(markdown, "(?m)^##\s*(.+)$", "<h2>$1</h2>");
         }else if(markdown.startsWith("#")) {
-            return convertHeader(markdown, "(?m)^#(.+)$", "<h1>$1</h1>");
+            return convertHeader(markdown, "(?m)^#\s*(.+)$", "<h1>$1</h1>");
         }
        return markdown;
     }
