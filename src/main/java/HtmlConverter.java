@@ -95,7 +95,7 @@ public class HtmlConverter {
             if (i == len - 1) {
                 next = null;
             }
-            if(  !curr.isBlank() && !curr.startsWith("<h") && !curr.contains("<a")) {
+            if(  !curr.isBlank() && !curr.startsWith("<h") ) {
                 if(pre==null || pre.isBlank() || pre.startsWith("<h") ||  pre.contains("<a")) {
                     curr = addLeftPTag(curr);
                 }
@@ -110,6 +110,7 @@ public class HtmlConverter {
 
 
     }
+
 
     public String addLeftPTag(String s){
         s = "<p>" + s;
